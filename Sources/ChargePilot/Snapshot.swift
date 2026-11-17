@@ -25,6 +25,7 @@ enum Snapshot {
                        to: directory.appendingPathComponent("settings-\(name).png"))
             }
             renderIcons(to: directory.appendingPathComponent("icons.png"))
+            render(WelcomeView().environmentObject(model), to: directory.appendingPathComponent("welcome.png"))
             exit(0)
         }
     }
