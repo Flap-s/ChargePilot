@@ -15,7 +15,12 @@ if git rev-parse "v$NEW" >/dev/null 2>&1; then echo "Le tag v$NEW existe déjà.
 echo "$NEW" > VERSION
 swift test
 ./Scripts/build-app.sh
-# build-app.sh signs outside iCloud and zips that clean copy into build.noindex/ChargePilot.zip.
+# build-app.sh signs outside iCloud and zips that clean copy into build.noindex/ChargePilot.zip (used by the in-app
+# updater). The disk image for first installs is made from that same clean copy.
+DMG_SOURCE="$(mktemp -d "${TMPDIR:-/tmp}/chargepilot-release.XXXXXX")"
+trap 'rm -rf "$DMG_SOURCE"' EXIT
+ditto -x -k build.noindex/ChargePilot.zip "$DMG_SOURCE"
+./Scripts/make-dmg.sh "$DMG_SOURCE/ChargePilot.app" build.noindex/ChargePilot.dmg
 
 if ! git diff --quiet VERSION; then
   git add VERSION
@@ -23,5 +28,5 @@ if ! git diff --quiet VERSION; then
 fi
 git tag "v$NEW"
 git push origin HEAD "v$NEW"
-gh release create "v$NEW" build.noindex/ChargePilot.zip --title "ChargePilot $NEW" --notes "$NOTES"
+gh release create "v$NEW" build.noindex/ChargePilot.dmg build.noindex/ChargePilot.zip --title "ChargePilot $NEW" --notes "$NOTES"
 echo "ChargePilot $NEW publiée"

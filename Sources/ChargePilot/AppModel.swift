@@ -99,7 +99,7 @@ final class AppModel: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
             Task { @MainActor in await self?.refresh() }
         }
-        if Self.inBundle { UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in } }
+        // Notification permission is asked from the welcome window, alongside the other permissions.
         Task { await refresh() }
         readPowerMode()
     }

@@ -62,6 +62,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 if HelperInstaller.needsUpdate { AppModel.shared.installHelper() }
             }
         }
+        if WelcomeWindow.shouldShow, !CommandLine.arguments.contains("--snapshot") {
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(600))
+                WelcomeWindow.show()
+            }
+        }
         Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             Task { @MainActor in AppModel.shared.refreshSlow() }
         }

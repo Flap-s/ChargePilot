@@ -13,13 +13,13 @@ Une batterie lithium-ion vieillit plus vite quand elle reste longtemps pleine. C
 - **LED MagSafe** (automatique, éteinte, verte, orange), modes **économie d'énergie** et **haute puissance**.
 - **Planification** de tâches, **historique** et graphiques (charge, température, puissance, santé), **notifications**.
 - Commande `chargepilot` et liens `chargepilot://…` pour Raccourcis.
-- **Mises à jour** intégrées depuis les publications GitHub.
+- **Mises à jour** intégrées depuis les publications GitHub, **installeur DMG** et **fenêtre de bienvenue** pour les autorisations.
 
 ## Installation
 
-1. Téléchargez `ChargePilot.zip` depuis la [dernière publication](../../releases/latest) et placez `ChargePilot.app` dans **Applications**.
-2. L'app n'est pas notarisée par Apple : au premier lancement, faites un clic droit sur l'app › **Ouvrir**, ou autorisez-la dans Réglages Système › Confidentialité et sécurité.
-3. Cliquez sur l'icône de batterie dans la barre des menus, puis sur **Installer l'assistant**. Votre mot de passe est demandé une fois : l'assistant est le service système qui pilote la charge.
+1. Téléchargez `ChargePilot.dmg` depuis la [dernière publication](../../releases/latest), ouvrez-le et glissez ChargePilot sur le dossier **Applications**.
+2. L'app n'est pas notarisée par Apple : si macOS bloque le premier lancement, ouvrez Réglages Système › Confidentialité et sécurité, puis **Ouvrir quand même**.
+3. Au premier lancement, une fenêtre de bienvenue rassemble ce dont ChargePilot a besoin : l'**assistant de charge** (votre mot de passe est demandé une fois), les **notifications** et l'**ouverture à la connexion**. Elle propose aussi de déplacer l'app dans Applications si elle n'y est pas.
 
 Si un autre outil de limitation de charge est installé, quittez-le : deux outils qui pilotent la même batterie se contredisent.
 
@@ -54,6 +54,7 @@ Prérequis : macOS 15 ou plus récent, Xcode (Swift 6).
 
 ```bash
 Scripts/build-app.sh   # build.noindex/ChargePilot.app et ChargePilot.zip
+Scripts/make-dmg.sh build.noindex/ChargePilot.app build.noindex/ChargePilot.dmg   # installeur (met en page la fenêtre via Finder)
 swift test
 ```
 
@@ -63,7 +64,7 @@ L'app est signée ad hoc avec des exigences épinglées aux identifiants (`app.c
 
 ChargePilot vérifie les publications de son dépôt GitHub au démarrage puis toutes les 6 heures, ou à la demande dans Réglages › Mises à jour. Si une version plus récente existe, `ChargePilot.zip` est téléchargée, son identifiant, sa version et sa signature sont vérifiés, puis elle remplace l'app et la relance. L'assistant n'est réinstallé (avec le mot de passe administrateur) que si son code a changé : sa révision, `ChargePilotBuild.helperRevision`, est indépendante de la version de l'app.
 
-Publier une version (le dépôt est lu depuis `git remote origin`) :
+Publier une version (le dépôt est lu depuis `git remote origin`) ; la publication contient `ChargePilot.dmg` pour les nouvelles installations et `ChargePilot.zip` pour les mises à jour :
 
 ```bash
 Scripts/release.sh 1.1.0 "Ce qui change"

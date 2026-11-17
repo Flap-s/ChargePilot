@@ -97,6 +97,12 @@ struct GeneralSettings: View {
                 Toggle("Prévenir quand la limite est atteinte, une tâche se termine ou la batterie chauffe",
                        isOn: Binding(get: { model.notificationsEnabled }, set: { model.notificationsEnabled = $0 }))
             }
+            Section {
+                Button("Revoir la fenêtre de bienvenue") { WelcomeWindow.show() }
+            } footer: {
+                Text("Elle rassemble les autorisations dont ChargePilot a besoin : assistant, notifications, ouverture à la connexion.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
     }
